@@ -481,11 +481,7 @@ Limited companion slots available.</p>
 
         <form id="applicationForm" class="application-form">
 
-            <input
-            type="hidden"
-            id="plan"
-            name="plan"
-            required>
+            
 
             <div class="form-row">
 
@@ -506,10 +502,12 @@ Limited companion slots available.</p>
             <div class="form-row">
 
                 <input
-                    id="phone"
-                    type="tel"
-                    placeholder="Phone Number"
-                    required>
+                id="phone"
+                type="tel"
+                placeholder="Phone Number"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required>
 
                 <input
                     id="instagram"
@@ -535,6 +533,10 @@ Limited companion slots available.</p>
 
             </div>
 
+            <input
+            type="hidden"
+            id="plan"
+            name="plan">
             <div class="plan-selector">
 
             <div
@@ -625,6 +627,15 @@ Limited companion slots available.</p>
             .value = plan;
         }
 
+        if(message.trim().length < 20){
+
+            alert(
+            "Please tell us a little more about yourself."
+            );
+
+            return;
+        }
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
     import {
@@ -655,7 +666,10 @@ Limited companion slots available.</p>
 
         const fullName = document.getElementById("fullName").value;
         const email = document.getElementById("email").value;
-        const phone = document.getElementById("phone").value;
+        let phone =
+        document.getElementById("phone")
+        .value
+        .trim();
         const instagram = document.getElementById("instagram").value;
         const plan = document.getElementById("plan").value;
         const message = document.getElementById("message").value;
@@ -664,6 +678,12 @@ Limited companion slots available.</p>
 
             alert("Please select a membership plan.");
 
+            return;
+        }
+
+
+        if (!/^[6-9][0-9]{9}$/.test(phone)) {
+            alert("Please enter a valid 10-digit phone number.");
             return;
         }
 
