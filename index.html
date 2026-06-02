@@ -539,7 +539,7 @@ Limited companion slots available.</p>
 
             <div
                 class="plan-option"
-                onclick="selectPlan('Essential - ₹7,999')">
+                onclick="selectPlan('Essential - ₹7,999', this)"
 
                 <h3>Essential</h3>
 
@@ -551,7 +551,7 @@ Limited companion slots available.</p>
 
             <div
                 class="plan-option"
-                onclick="selectPlan('Premium - ₹12,999')">
+                onclick="selectPlan('Premium - ₹12,999', this)"
 
                 <div class="recommended-badge">
                     MOST POPULAR
@@ -610,7 +610,7 @@ Limited companion slots available.</p>
 
     <script type="module">
 
-        window.selectPlan = function(plan){
+        window.selectPlan = function(plan, element){
 
             document
             .querySelectorAll('.plan-option')
@@ -618,7 +618,7 @@ Limited companion slots available.</p>
                 card.classList.remove('active');
             });
 
-            event.currentTarget.classList.add('active');
+            element.classList.add('active');
 
             document
             .getElementById('plan')
@@ -657,7 +657,6 @@ Limited companion slots available.</p>
         const email = document.getElementById("email").value;
         const phone = document.getElementById("phone").value;
         const instagram = document.getElementById("instagram").value;
-        const companion = document.getElementById("companion").value;
         const plan = document.getElementById("plan").value;
         const message = document.getElementById("message").value;
 
@@ -676,7 +675,6 @@ Limited companion slots available.</p>
                 email,
                 phone,
                 instagram,
-                companion,
                 plan,
                 message,
                 status: "pending_review",
