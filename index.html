@@ -541,8 +541,7 @@ Limited companion slots available.</p>
 
             <div
                 class="plan-option"
-                onclick="selectPlan('Essential - ₹7,999', this)">
-
+                onclick="window.selectPlan('Essential - ₹7,999', this)">
                 <h3>Essential</h3>
 
                 <div class="plan-price">
@@ -553,7 +552,7 @@ Limited companion slots available.</p>
 
             <div
                 class="plan-option"
-                onclick="selectPlan('Premium - ₹12,999', this)">
+                onclick="window.selectPlan('Premium - ₹12,999', this)">
 
                 <div class="recommended-badge">
                     MOST POPULAR
@@ -627,14 +626,7 @@ Limited companion slots available.</p>
             .value = plan;
         }
 
-        if(message.trim().length < 20){
-
-            alert(
-            "Please tell us a little more about yourself."
-            );
-
-            return;
-        }
+        
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
@@ -684,6 +676,16 @@ Limited companion slots available.</p>
 
         if (!/^[6-9][0-9]{9}$/.test(phone)) {
             alert("Please enter a valid 10-digit phone number.");
+            return;
+        }
+
+
+        if(message.trim().length < 20){
+
+            alert(
+                "Please tell us a little more about yourself."
+            );
+
             return;
         }
 
