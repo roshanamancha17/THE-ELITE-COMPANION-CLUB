@@ -1,51 +1,31 @@
 const functions = require("firebase-functions");
-const { Resend } = require("resend");
+const axios = require("axios");
 
-const resend = new Resend(
-  functions.config().resend.key
-);
-
-exports.sendApplicationEmail =
+exports.notifyDiscord =
 functions.https.onCall(async (data) => {
 
-  const {
-    email,
-    fullName,
-    applicationId
-  } = data;
+    const WEBHOOK_URL =
+    "https://discord.com/api/webhooks/1511923265248038973/QXjtNeaDlfhYj7bD8Zanw2OAmP7PT9OsMrFRoZ73Y68iHSzq-HklsYFN4hFgRJsrEN0i";
 
-  await resend.emails.send({
-    from: "ECC <onboarding@yourdomain.com>",
-    to: email,
-    subject: "Application Received",
-    html: `
-      <h2>Application Received</h2>
+    await axios.post(
+        WEBHOOK_URL,
+        {
+            content:
+`🚨 NEW ECC APPLICATION
 
-      <p>Hello ${fullName},</p>
+ID: ${data.applicationId}
 
-      <p>
-      Thank you for applying to
-      The Elite Companion Club.
-      </p>
+Name: ${data.fullName}
 
-      <p>
-      Application ID:
-      <strong>${applicationId}</strong>
-      </p>
+Phone: ${data.phone}
 
-      <p>
-      Status:
-      Pending Review
-      </p>
+Instagram: ${data.instagram}
 
-      <p>
-      Expected Review Time:
-      12-24 Hours
-      </p>
-    `
-  });
+Plan: ${data.plan}`
+        }
+    );
 
-  return {
-    success: true
-  };
+    return {
+        success: true
+    };
 });

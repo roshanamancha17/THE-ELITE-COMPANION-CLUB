@@ -711,25 +711,19 @@ Limited companion slots available.</p>
             }
         );
 
-        const sendEmail =
+        const notifyDiscord =
         httpsCallable(
         functions,
-        "sendApplicationEmail"
+        "notifyDiscord"
         );
 
-        try {
-
-            await sendEmail({
-                email,
-                fullName,
-                applicationId
-            });
-
-        } catch(error) {
-
-            console.error(error);
-
-        }
+        await notifyDiscord({
+            applicationId,
+            fullName,
+            phone,
+            instagram,
+            plan
+        });
 
         alert(
     `Application Submitted!
