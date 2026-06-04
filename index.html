@@ -711,27 +711,8 @@ Limited companion slots available.</p>
             }
         );
 
-        try {
 
-    const notifyDiscord =
-        httpsCallable(
-        functions,
-        "notifyDiscord"
-        );
-
-        await notifyDiscord({
-            applicationId,
-            fullName,
-            phone,
-            instagram,
-            plan
-        });
-
-    } catch(error) {
-
-        console.error("Discord Error:", error);
-
-    }
+    
 
         alert(
     `Application Submitted!
