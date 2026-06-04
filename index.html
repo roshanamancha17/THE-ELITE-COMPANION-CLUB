@@ -638,6 +638,12 @@ Limited companion slots available.</p>
     }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    import {
+    getFunctions,
+    httpsCallable
+    }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+
     const firebaseConfig = {
     apiKey: "AIzaSyBIVewKXlA8GAyvtYbfM2Y8dfYk-YJglRU",
     authDomain: "the-elite-companion-club.firebaseapp.com",
@@ -647,6 +653,7 @@ Limited companion slots available.</p>
     const app = initializeApp(firebaseConfig);
 
     const db = getFirestore(app);
+    const functions = getFunctions(app, "us-central1");
 
     document
     .getElementById("applicationForm")
@@ -704,6 +711,28 @@ Limited companion slots available.</p>
             }
         );
 
+        try {
+
+    const notifyDiscord =
+        httpsCallable(
+        functions,
+        "notifyDiscord"
+        );
+
+        await notifyDiscord({
+            applicationId,
+            fullName,
+            phone,
+            instagram,
+            plan
+        });
+
+    } catch(error) {
+
+        console.error("Discord Error:", error);
+
+    }
+
         alert(
     `Application Submitted!
 
@@ -715,6 +744,13 @@ Limited companion slots available.</p>
         );
 
         e.target.reset();
+        document
+        .querySelectorAll('.plan-option')
+        .forEach(card => {
+            card.classList.remove('active');
+        });
+
+        document.getElementById('plan').value = '';
     });
     </script>
 </body>
