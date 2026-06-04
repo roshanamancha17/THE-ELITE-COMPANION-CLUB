@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>ECC Dashboard</title>
+
+<style>
+
+:root{
+    --gold:#C5A059;
+    --black:#0f0f0f;
+    --card:#181818;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--black);
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:40px;
+}
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+}
+
+.logo{
+
+    font-size:32px;
+
+    font-weight:bold;
+}
+
+.logo span{
+
+    color:var(--gold);
+}
+
+.logout-btn{
+
+    background:none;
+
+    border:1px solid var(--gold);
+
+    color:var(--gold);
+
+    padding:12px 20px;
+
+    cursor:pointer;
+}
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin-bottom:30px;
+}
+
+.stat-card{
+
+    background:var(--card);
+
+    border:1px solid rgba(197,160,89,.25);
+
+    padding:20px;
+}
+
+.stat-number{
+
+    font-size:32px;
+
+    color:var(--gold);
+
+    margin-top:10px;
+}
+
+.card{
+
+    background:var(--card);
+
+    border:1px solid rgba(197,160,89,.25);
+
+    padding:25px;
+
+    margin-bottom:20px;
+}
+
+.card h3{
+
+    color:var(--gold);
+
+    margin-bottom:15px;
+}
+
+.info{
+
+    margin-bottom:8px;
+}
+
+.status{
+
+    margin-top:15px;
+
+    margin-bottom:15px;
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:4px;
+}
+
+.pending_review{
+
+    background:#4d3a00;
+}
+
+.approved{
+
+    background:#0f5a2a;
+}
+
+.rejected{
+
+    background:#6d1717;
+}
+
+.actions{
+
+    margin-top:20px;
+}
+
+.btn{
+
+    border:none;
+
+    padding:10px 15px;
+
+    cursor:pointer;
+
+    margin-right:10px;
+}
+
+.approve{
+
+    background:#198754;
+
+    color:white;
+}
+
+.reject{
+
+    background:#dc3545;
+
+    color:white;
+}
+
+@media(max-width:900px){
+
+    .stats{
+
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+.notes{
+
+    width:100%;
+
+    background:#111;
+
+    color:white;
+
+    border:1px solid rgba(197,160,89,.25);
+
+    padding:12px;
+
+    margin-top:10px;
+
+    min-height:90px;
+
+    resize:vertical;
+}
+
+.notes-btn{
+
+    background:#C5A059;
+
+    color:black;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="header">
+
+<div class="logo">
+    ECC <span>DASHBOARD</span>
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+    Logout
+
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+    Total
+    <div
+    class="stat-number"
+    id="totalCount">0</div>
+</div>
+
+<div class="stat-card">
+    Pending
+    <div
+    class="stat-number"
+    id="pendingCount">0</div>
+</div>
+
+<div class="stat-card">
+    Approved
+    <div
+    class="stat-number"
+    id="approvedCount">0</div>
+</div>
+
+<div class="stat-card">
+    Rejected
+    <div
+    class="stat-number"
+    id="rejectedCount">0</div>
+</div>
+
+</div>
+
+<div id="applications"></div>
+
+<script type="module">
+
+const admin =
+localStorage.getItem("eccAdmin");
+
+if(!admin){
+
+    location.href =
+    "admin.html";
+}
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+updateDoc,
+doc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBIVewKXlA8GAyvtYbfM2Y8dfYk-YJglRU",
+authDomain: "the-elite-companion-club.firebaseapp.com",
+projectId: "the-elite-companion-club"
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+loadApplications();
+
+async function loadApplications(){
+
+    const container =
+    document.getElementById(
+    "applications"
+    );
+
+    container.innerHTML = "";
+
+    let total = 0;
+    let pending = 0;
+    let approved = 0;
+    let rejected = 0;
+
+    const snapshot =
+    await getDocs(
+        collection(
+            db,
+            "applications"
+        )
+    );
+
+    snapshot.forEach((application)=>{
+
+        total++;
+
+        const data =
+        application.data();
+
+        if(data.status === "pending_review")
+        pending++;
+
+        if(data.status === "approved")
+        approved++;
+
+        if(data.status === "rejected")
+        rejected++;
+
+        const div =
+        document.createElement(
+        "div"
+        );
+
+        div.className =
+        "card";
+
+        div.innerHTML = `
+
+        <h3>
+        ${data.fullName}
+        </h3>
+
+        <div class="info">
+        Email:
+        ${data.email}
+        </div>
+
+        <div class="info">
+        Phone:
+        ${data.phone}
+        </div>
+
+        <div class="info">
+        Instagram:
+        ${data.instagram}
+        </div>
+
+        <div class="info">
+        Plan:
+        ${data.plan}
+        </div>
+
+        <div class="info">
+        ID:
+        ${data.applicationId}
+        </div>
+
+        <div class="info">
+        <b>Admin Notes:</b>
+        </div>
+
+        <textarea
+        class="notes"
+        id="note-${application.id}"
+        placeholder="Write notes about this client...">${data.adminNotes || ""}</textarea>
+
+        <div class="status ${data.status}">
+        ${data.status}
+        </div>
+
+        <div class="actions">
+
+            <button
+            class="btn notes-btn"
+            onclick="saveNotes('${application.id}')">
+
+            Save Notes
+
+            </button>
+            
+            <button
+            class="btn approve"
+            onclick="approve('${application.id}')">
+
+            Approve
+
+            </button>
+
+            <button
+            class="btn reject"
+            onclick="reject('${application.id}')">
+
+            Reject
+
+            </button>
+
+
+
+        </div>
+
+        `;
+
+        container.appendChild(
+        div
+        );
+    });
+
+    document
+    .getElementById(
+    "totalCount"
+    ).textContent = total;
+
+    document
+    .getElementById(
+    "pendingCount"
+    ).textContent = pending;
+
+    document
+    .getElementById(
+    "approvedCount"
+    ).textContent = approved;
+
+    document
+    .getElementById(
+    "rejectedCount"
+    ).textContent = rejected;
+}
+
+window.approve =
+async function(id){
+
+    await updateDoc(
+        doc(
+            db,
+            "applications",
+            id
+        ),
+        {
+            status:"approved"
+        }
+    );
+
+    location.reload();
+}
+
+window.reject =
+async function(id){
+
+    await updateDoc(
+        doc(
+            db,
+            "applications",
+            id
+        ),
+        {
+            status:"rejected"
+        }
+    );
+
+    location.reload();
+}
+
+window.saveNotes =
+async function(id){
+
+    const notes =
+    document.getElementById(
+        `note-${id}`
+    ).value;
+
+    await updateDoc(
+        doc(
+            db,
+            "applications",
+            id
+        ),
+        {
+            adminNotes: notes
+        }
+    );
+
+    alert("Notes Saved");
+}
+
+window.logout =
+function(){
+
+    localStorage.removeItem(
+    "eccAdmin"
+    );
+
+    location.href =
+    "admin.html";
+}
+
+</script>
+
+</body>
+</html>

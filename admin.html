@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>ECC Admin Login</title>
+
+<style>
+
+:root{
+    --gold:#C5A059;
+    --black:#0f0f0f;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--black);
+    color:white;
+    font-family:Arial,sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-card{
+
+    width:420px;
+
+    background:#171717;
+
+    border:1px solid rgba(197,160,89,.25);
+
+    padding:40px;
+}
+
+.logo{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+    font-size:32px;
+
+    font-weight:bold;
+}
+
+.logo span{
+
+    color:var(--gold);
+}
+
+input{
+
+    width:100%;
+
+    padding:15px;
+
+    margin-bottom:15px;
+
+    background:#111;
+
+    color:white;
+
+    border:1px solid rgba(197,160,89,.25);
+
+    outline:none;
+}
+
+input:focus{
+
+    border-color:var(--gold);
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    background:var(--gold);
+
+    color:black;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+button:hover{
+
+    opacity:.9;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="login-card">
+
+<div class="logo">
+    ECC <span>ADMIN</span>
+</div>
+
+<input
+id="username"
+placeholder="Username">
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+<button onclick="login()">
+    Login
+</button>
+
+</div>
+
+<script>
+
+const admins = [
+
+    {
+        username:"roshan",
+        password:"roshan123"
+    },
+
+    {
+        username:"partner",
+        password:"partner123"
+    }
+
+];
+
+window.login = function(){
+
+    const username =
+    document.getElementById("username").value;
+
+    const password =
+    document.getElementById("password").value;
+
+    const admin =
+    admins.find(user =>
+        user.username === username &&
+        user.password === password
+    );
+
+    if(admin){
+
+        localStorage.setItem(
+            "eccAdmin",
+            username
+        );
+
+        location.href =
+        "dashboard.html";
+
+    }else{
+
+        alert("Invalid Credentials");
+    }
+}
+
+</script>
+
+</body>
+</html>
